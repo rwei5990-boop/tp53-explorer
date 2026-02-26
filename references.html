@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p53 Explorer — References</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=Inconsolata:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:    #f4f9f0;
+      --bg2:   #ffffff;
+      --bg3:   #e8f4e0;
+      --bdr:   #d0e8d0;
+      --txt:   #1a2a1a;
+      --txt2:  #3a5a3a;
+      --dim:   #6a8a6a;
+      --red:   #d42a2a;
+      --blue:  #1a5aaa;
+      --green: #2a9a50;
+      --yel:   #c8c800;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--txt);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      background: rgba(244,249,240,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--bdr);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .nav-logo { font-family: 'Instrument Serif', serif; font-size: 1.05rem; color: var(--txt); text-decoration: none; }
+    .nav-links { list-style: none; display: flex; gap: 4px; }
+    .nav-links a { font-family: 'Inconsolata', monospace; font-size: 0.7rem; color: var(--dim); text-decoration: none; letter-spacing: 0.06em; padding: 7px 15px; border-radius: 100px; transition: background 0.18s, color 0.18s; }
+    .nav-links a:hover { background: var(--bg3); color: var(--txt); }
+    .nav-links a.active { background: var(--blue); color: #fff; }
+
+    main {
+      flex: 1;
+      padding: 64px 52px;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .sec-tag {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.68rem;
+      color: var(--green);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sec-tag::before { content: ''; width: 18px; height: 1px; background: var(--green); display: block; }
+
+    h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      line-height: 1.08;
+      margin-bottom: 10px;
+    }
+    h2 em { font-style: italic; color: var(--green); }
+
+    .sec-sub {
+      font-size: 0.95rem;
+      color: var(--txt2);
+      line-height: 1.85;
+      max-width: 600px;
+      margin-bottom: 52px;
+    }
+
+    /* ── DISCLAIMER BOX ── */
+    .disclaimer {
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-left: 4px solid var(--blue);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 52px;
+      font-size: 0.88rem;
+      color: var(--txt2);
+      line-height: 1.75;
+    }
+    .disclaimer strong { color: var(--txt); }
+
+    /* ── SECTION HEADINGS ── */
+    .ref-section-head {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.35rem;
+      color: var(--txt);
+      margin: 52px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--bdr);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ref-section-head span {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      background: var(--bg3);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ── REFERENCE CARD ── */
+    .ref-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .ref-card {
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: 10px;
+      padding: 20px 24px;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .ref-card:hover {
+      border-color: #a0c8b0;
+      box-shadow: 0 4px 20px rgba(26,90,50,0.07);
+    }
+
+    .ref-num {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.78rem;
+      color: var(--blue);
+      font-weight: 400;
+      margin-top: 2px;
+      background: var(--bg3);
+      border-radius: 6px;
+      padding: 4px 0;
+      text-align: center;
+    }
+
+    .ref-body {}
+
+    .ref-authors {
+      font-size: 0.82rem;
+      color: var(--dim);
+      line-height: 1.6;
+      margin-bottom: 3px;
+    }
+
+    .ref-title {
+      font-size: 0.95rem;
+      color: var(--txt);
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    .ref-journal {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.72rem;
+      color: var(--dim);
+      margin-bottom: 8px;
+    }
+    .ref-journal em { font-style: italic; color: var(--txt2); }
+
+    .ref-note {
+      font-size: 0.82rem;
+      color: var(--txt2);
+      background: var(--bg3);
+      border-radius: 6px;
+      padding: 7px 12px;
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+    .ref-note strong { color: var(--green); }
+
+    .ref-links { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .ref-link {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      padding: 4px 12px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: 1px solid var(--bdr);
+      color: var(--blue);
+      background: #f0f6ff;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ref-link:hover { background: #ddeeff; border-color: #a0b8ee; }
+    .ref-link.green { color: var(--green); background: var(--bg3); border-color: var(--bdr); }
+    .ref-link.green:hover { background: #d0ead0; }
+
+    /* ── DATABASE TABLE ── */
+    .db-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 0;
+    }
+
+    .db-card {
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: 10px;
+      padding: 20px 22px;
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .db-card:hover {
+      border-color: #a0c8b0;
+      box-shadow: 0 4px 20px rgba(26,90,50,0.07);
+    }
+
+    .db-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.05rem;
+      color: var(--txt);
+      margin-bottom: 4px;
+    }
+    .db-url {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.68rem;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+    .db-desc {
+      font-size: 0.82rem;
+      color: var(--txt2);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    /* ── USED-FOR TAGS ── */
+    .used-for {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .tag {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.05em;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: var(--bg3);
+      color: var(--dim);
+      border: 1px solid var(--bdr);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--txt);
+      color: #6a8a6a;
+      padding: 20px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+    footer a { color: #6a8a6a; text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: #c8e0c8; }
+    .footer-links { display: flex; gap: 24px; }
+
+    /* ── FADE-IN ── */
+    .fade { opacity: 0; transform: translateY(18px); animation: fadein 0.7s forwards; }
+    .fade:nth-child(2) { animation-delay: 0.1s; }
+    .fade:nth-child(3) { animation-delay: 0.2s; }
+
+    @keyframes fadein { to { opacity: 1; transform: none; } }
+
+    @media (max-width: 900px) {
+      .db-grid { grid-template-columns: 1fr; }
+      .ref-card { grid-template-columns: 1fr; }
+      .ref-num { display: none; }
+      nav, main, footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">p53 · Mutation Explorer</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="structure.html">Structure</a></li>
+    <li><a href="mutations.html">Mutations</a></li>
+    <li><a href="statistics.html">Statistics</a></li>
+    <li><a href="domains.html">Domains</a></li>
+    <li><a href="references.html" class="active">References</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="sec-tag fade">Sources &amp; Data</div>
+  <h2 class="fade">References &amp; <em>Data Sources</em></h2>
+  <p class="sec-sub fade">Every fact, statistic, and biological claim on this website is sourced from peer-reviewed literature or authoritative public databases. This page catalogues them all.</p>
+
+  <div class="disclaimer">
+    <strong>Educational use only.</strong> This website is a learning tool built on publicly available research data. It is not a clinical resource and should not be used for medical decisions. For clinical information about TP53 mutations, consult a qualified healthcare provider or refer directly to the databases listed below.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 1: PRIMARY DATABASES
+  ═══════════════════════════════════════════════ -->
+  <div class="ref-section-head">Primary Databases <span>data sources</span></div>
+
+  <div class="db-grid">
+    <div class="db-card">
+      <div class="db-name">NCI TP53 Database</div>
+      <div class="db-url">tp53.cancer.gov</div>
+      <div class="db-desc">The authoritative resource for TP53 variants, maintained by the National Cancer Institute. R21 (January 2025) contains ~29,900 somatic tumor variants from the literature since 1989, plus germline variants, functional data, and cell line information.</div>
+      <div class="used-for">
+        <span class="tag">Mutation map data</span>
+        <span class="tag">Cancer frequency data</span>
+        <span class="tag">Hotspot frequencies</span>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-name">RCSB Protein Data Bank</div>
+      <div class="db-url">rcsb.org · Structure 2OCJ</div>
+      <div class="db-desc">The global archive of 3D macromolecular structure data. Structure 2OCJ is the crystal structure of the p53 core domain (DNA-binding domain) at 2.05 Å resolution, solved by Joerger, Ang &amp; Fersht (2006). Used for all 3D visualizations in this site.</div>
+      <div class="used-for">
+        <span class="tag">3D protein viewer</span>
+        <span class="tag">Domain visualization</span>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-name">UniProt P04637</div>
+      <div class="db-url">uniprot.org/uniprot/P04637</div>
+      <div class="db-desc">The Swiss-Prot entry for human p53 (TP53_HUMAN). Used as the authoritative source for domain boundary positions, post-translational modifications, and protein length (393 amino acids).</div>
+      <div class="used-for">
+        <span class="tag">Domain boundaries</span>
+        <span class="tag">Protein length</span>
+        <span class="tag">Domain functions</span>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-name">COSMIC</div>
+      <div class="db-url">cancer.sanger.ac.uk/cosmic</div>
+      <div class="db-desc">Catalogue of Somatic Mutations in Cancer, maintained by the Wellcome Sanger Institute. Provides mutation frequency data and tissue distribution across cancer types, complementary to the NCI TP53 Database.</div>
+      <div class="used-for">
+        <span class="tag">Mutation frequencies</span>
+        <span class="tag">Cancer type context</span>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-name">cBioPortal</div>
+      <div class="db-url">cbioportal.org</div>
+      <div class="db-desc">An open platform for exploring multidimensional cancer genomics data from TCGA and other large studies. Used to cross-check mutation prevalence figures across cancer types.</div>
+      <div class="used-for">
+        <span class="tag">Prevalence cross-check</span>
+        <span class="tag">Cancer genomics</span>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-name">ClinVar</div>
+      <div class="db-url">ncbi.nlm.nih.gov/clinvar</div>
+      <div class="db-desc">NCBI's archive of relationships between genomic variants and human health. Used to verify germline TP53 variant classifications related to Li-Fraumeni syndrome.</div>
+      <div class="used-for">
+        <span class="tag">Germline variants</span>
+        <span class="tag">Clinical significance</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 2: KEY PAPERS — DISCOVERY & OVERVIEW
+  ═══════════════════════════════════════════════ -->
+  <div class="ref-section-head">Discovery &amp; Historical Overview <span>foundational papers</span></div>
+
+  <div class="ref-list">
+
+    <div class="ref-card">
+      <div class="ref-num">[1]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Lane DP, Crawford LV.</div>
+        <div class="ref-title">T antigen is bound to a host protein in SV40-transformed cells.</div>
+        <div class="ref-journal"><em>Nature</em> 278, 261–263 (1979).</div>
+        <div class="ref-note"><strong>Used for:</strong> Discovery of p53 (1979). This paper first described a 53 kDa cellular protein co-immunoprecipitating with the SV40 large T antigen. Along with Linzer &amp; Levine and DeLeo et al. (all 1979), it established p53 as a cellular protein of interest. Lane later coined the phrase "guardian of the genome" (1992).</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1038/278261a0" class="ref-link" target="_blank">DOI: 10.1038/278261a0</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[2]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Linzer DIH, Levine AJ.</div>
+        <div class="ref-title">Characterization of a 54K dalton cellular SV40 tumor antigen present in SV40-transformed cells and uninfected embryonal carcinoma cells.</div>
+        <div class="ref-journal"><em>Cell</em> 17(1), 43–52 (1979).</div>
+        <div class="ref-note"><strong>Used for:</strong> Independent co-discovery of p53 in May 1979, two months after Lane &amp; Crawford, using a different experimental system.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1016/0092-8674(79)90293-9" class="ref-link" target="_blank">DOI: 10.1016/0092-8674(79)90293-9</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[3]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Lane DP.</div>
+        <div class="ref-title">Cancer. p53, guardian of the genome.</div>
+        <div class="ref-journal"><em>Nature</em> 358(6381), 15–16 (1992).</div>
+        <div class="ref-note"><strong>Used for:</strong> Origin of the phrase "guardian of the genome" — used in the title and hero section of this website.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1038/358015a0" class="ref-link" target="_blank">DOI: 10.1038/358015a0</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[4]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Olivier M, Hollstein M, Hainaut P.</div>
+        <div class="ref-title">TP53 mutations in human cancers: origins, consequences, and clinical use.</div>
+        <div class="ref-journal"><em>Cold Spring Harbor Perspectives in Biology</em> 2(1), a001008 (2010).</div>
+        <div class="ref-note"><strong>Used for:</strong> Mutation prevalence statistics; the figure that 86% of TP53 mutations cluster between codons 125–300 (the DNA-binding domain); and the observation that >75% of all TP53 mutations are missense substitutions.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1101/cshperspect.a001008" class="ref-link" target="_blank">DOI: 10.1101/cshperspect.a001008</a>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2827900/" class="ref-link green" target="_blank">PMC Free Full Text</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[5]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Vousden KH, Prives C.</div>
+        <div class="ref-title">Blinded by the light: the growing complexity of p53.</div>
+        <div class="ref-journal"><em>Cell</em> 137(3), 413–431 (2009).</div>
+        <div class="ref-note"><strong>Used for:</strong> Authoritative review of p53 function: DNA damage sensing, cell cycle arrest (growth arrest), apoptosis induction, and the MDM2 negative feedback loop. Basis for the About page functional descriptions.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1016/j.cell.2009.04.037" class="ref-link" target="_blank">DOI: 10.1016/j.cell.2009.04.037</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[6]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Bouaoun L, Sonkin D, Ardin M, et al.</div>
+        <div class="ref-title">TP53 variations in human cancers: new lessons from the IARC TP53 database and genomics data.</div>
+        <div class="ref-journal"><em>Human Mutation</em> 37(9), 865–876 (2016).</div>
+        <div class="ref-note"><strong>Used for:</strong> Current mutation frequency data; comparison of NCI/IARC and TCGA genomics data; hotspot codon positions (248, 273, 175, 245 as top four by frequency). This is the primary methodological reference for the mutation map.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1002/humu.23035" class="ref-link" target="_blank">DOI: 10.1002/humu.23035</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[7]</div>
+      <div class="ref-body">
+        <div class="ref-authors">de Andrade KC, Lee EE, Tookmanian EM, et al.</div>
+        <div class="ref-title">The TP53 Database: transition from the International Agency for Research on Cancer to the US National Cancer Institute.</div>
+        <div class="ref-journal"><em>Cell Death &amp; Differentiation</em> 29, 1071–1073 (2022).</div>
+        <div class="ref-note"><strong>Used for:</strong> The official citation for the NCI TP53 Database (R21, 2025) as directed by the database itself. The R21 release contains ~29,900 tumor variants — the source of the "29,900+ catalogued variants" statistic on the Home page.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1038/s41418-022-00976-3" class="ref-link" target="_blank">DOI: 10.1038/s41418-022-00976-3</a>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9090805/" class="ref-link green" target="_blank">PMC Free Full Text</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 3: STRUCTURE & 3D VIEWER
+  ═══════════════════════════════════════════════ -->
+  <div class="ref-section-head">Protein Structure <span>3D viewer sources</span></div>
+
+  <div class="ref-list">
+
+    <div class="ref-card">
+      <div class="ref-num">[8]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Joerger AC, Ang HC, Fersht AR.</div>
+        <div class="ref-title">Structural basis for understanding oncogenic p53 mutations and designing rescue drugs.</div>
+        <div class="ref-journal"><em>Proceedings of the National Academy of Sciences</em> 103(41), 15056–15061 (2006).</div>
+        <div class="ref-note"><strong>Used for:</strong> The crystal structure loaded in the 3D viewer is PDB entry 2OCJ, which is the structure described in this paper. It shows the p53 core domain (DNA-binding domain) at 2.05 Å resolution and includes structural context for hotspot mutations R175H, R248W, and R273H.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1073/pnas.0607286103" class="ref-link" target="_blank">DOI: 10.1073/pnas.0607286103</a>
+          <a href="https://www.rcsb.org/structure/2OCJ" class="ref-link green" target="_blank">PDB: 2OCJ</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[9]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Joerger AC, Fersht AR.</div>
+        <div class="ref-title">Structural biology of the tumor suppressor p53.</div>
+        <div class="ref-journal"><em>Annual Review of Biochemistry</em> 77, 557–579 (2008).</div>
+        <div class="ref-note"><strong>Used for:</strong> Definitive reference for p53 protein domain structure and function, structural and contact mutant classification, and the structural basis of hotspot mutations. Domain boundary positions cited in <code>protein_domains.json</code> are consistent with this review.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1146/annurev.biochem.77.060806.091238" class="ref-link" target="_blank">DOI: 10.1146/annurev.biochem.77.060806.091238</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 4: HOTSPOT MUTATIONS
+  ═══════════════════════════════════════════════ -->
+  <div class="ref-section-head">Hotspot Mutation Biology <span>mutations page</span></div>
+
+  <div class="ref-list">
+
+    <div class="ref-card">
+      <div class="ref-num">[10]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Brosh R, Rotter V.</div>
+        <div class="ref-title">When mutants gain new powers: news from the mutant p53 field.</div>
+        <div class="ref-journal"><em>Nature Reviews Cancer</em> 9, 701–713 (2009).</div>
+        <div class="ref-note"><strong>Used for:</strong> The gain-of-function concept for hotspot mutants described on the About page ("When It Fails" card) and Mutations page. Documents how R175H, R248W, and R273H not only lose tumour suppressor function but acquire new cancer-promoting activities.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1038/nrc2693" class="ref-link" target="_blank">DOI: 10.1038/nrc2693</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[11]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Bullock AN, Fersht AR.</div>
+        <div class="ref-title">Rescuing the function of mutant p53.</div>
+        <div class="ref-journal"><em>Nature Reviews Cancer</em> 1, 68–76 (2001).</div>
+        <div class="ref-note"><strong>Used for:</strong> Classification of hotspot mutations into structural mutants (e.g., R175H — distort the protein fold) and contact mutants (e.g., R248W, R273H — directly disrupt DNA binding without major structural change). This classification is used in the hotspot detail cards.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1038/35094077" class="ref-link" target="_blank">DOI: 10.1038/35094077</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[12]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Petitjean A, Mathe E, Kato S, et al.</div>
+        <div class="ref-title">Impact of mutant p53 functional properties on TP53 mutation patterns and tumor phenotype: lessons from recent developments in the IARC TP53 database.</div>
+        <div class="ref-journal"><em>Human Mutation</em> 28(6), 622–629 (2007).</div>
+        <div class="ref-note"><strong>Used for:</strong> Hotspot codon frequencies (R175, G245, R248, R249, R273, R282 are the six most frequent somatic hotspots in the IARC database). Also the source for the figure that >75% of TP53 mutations are missense substitutions.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1002/humu.20495" class="ref-link" target="_blank">DOI: 10.1002/humu.20495</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[13]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Muller PAJ, Vousden KH.</div>
+        <div class="ref-title">Mutant p53 in cancer: new functions and therapeutic opportunities.</div>
+        <div class="ref-journal"><em>Cancer Cell</em> 25(3), 304–317 (2014).</div>
+        <div class="ref-note"><strong>Used for:</strong> Comprehensive review of gain-of-function mutant p53 biology, including the oncogenic activities of R175H (structural mutant) and R273H/R248W (contact mutants). Also the basis for the website's description that some mutant p53 proteins "promote cancer cell survival, invasion, and drug resistance."</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1016/j.ccr.2014.01.021" class="ref-link" target="_blank">DOI: 10.1016/j.ccr.2014.01.021</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[14]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Joerger AC, Fersht AR.</div>
+        <div class="ref-title">The p53 pathway: origins, inactivation in cancer, and emerging therapeutic approaches.</div>
+        <div class="ref-journal"><em>Annual Review of Biochemistry</em> 85, 375–404 (2016).</div>
+        <div class="ref-note"><strong>Used for:</strong> Molecular detail for individual hotspot mutations: R175H disrupts the L2/L3 loops and the hydrophobic core of the DNA-binding domain; R248 and R273 are DNA-contact residues whose substitution directly abolishes DNA binding without major conformational change. Basis for hotspot card descriptions on the Mutations page.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1146/annurev-biochem-060815-014710" class="ref-link" target="_blank">DOI: 10.1146/annurev-biochem-060815-014710</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 5: MDM2 & REGULATION
+  ═══════════════════════════════════════════════ -->
+  <div class="ref-section-head">MDM2 Regulation &amp; Feedback Loop <span>about page</span></div>
+
+  <div class="ref-list">
+
+    <div class="ref-card">
+      <div class="ref-num">[15]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Momand J, Zambetti GP, Olson DC, George D, Levine AJ.</div>
+        <div class="ref-title">The mdm-2 oncogene product forms a complex with the p53 protein and inhibits p53-mediated transactivation.</div>
+        <div class="ref-journal"><em>Cell</em> 69(7), 1237–1245 (1992).</div>
+        <div class="ref-note"><strong>Used for:</strong> Discovery of the MDM2–p53 interaction and the negative feedback loop. MDM2 binds to p53's transactivation domain and blocks its activity; p53 in turn transcriptionally activates MDM2, completing the auto-regulatory loop described in the "MDM2 Balance" card.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1016/0092-8674(92)90463-l" class="ref-link" target="_blank">DOI: 10.1016/0092-8674(92)90463-l</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[16]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Vogelstein B, Lane D, Levine AJ.</div>
+        <div class="ref-title">Surfing the p53 network.</div>
+        <div class="ref-journal"><em>Nature</em> 408, 307–310 (2000).</div>
+        <div class="ref-note"><strong>Used for:</strong> Overview of the p53 pathway and its role as a network hub integrating stress signals, activating the MDM2 feedback loop, and coordinating cell fate decisions (arrest, repair, apoptosis, senescence). Foundational context for the About page.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1038/35042675" class="ref-link" target="_blank">DOI: 10.1038/35042675</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 6: LI-FRAUMENI SYNDROME
+  ═══════════════════════════════════════════════ -->
+  <div class="ref-section-head">Li-Fraumeni Syndrome <span>about &amp; statistics pages</span></div>
+
+  <div class="ref-list">
+
+    <div class="ref-card">
+      <div class="ref-num">[17]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Li FP, Fraumeni JF Jr.</div>
+        <div class="ref-title">Soft-tissue sarcomas, breast cancer, and other neoplasms: a familial syndrome?</div>
+        <div class="ref-journal"><em>Annals of Internal Medicine</em> 71(4), 747–752 (1969).</div>
+        <div class="ref-note"><strong>Used for:</strong> Original description of Li-Fraumeni syndrome — the hereditary cancer predisposition syndrome caused by germline TP53 mutations. Mentioned on the Statistics and About pages.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.7326/0003-4819-71-4-747" class="ref-link" target="_blank">DOI: 10.7326/0003-4819-71-4-747</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[18]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Guha T, Malkin D.</div>
+        <div class="ref-title">Inherited TP53 mutations and the Li-Fraumeni syndrome.</div>
+        <div class="ref-journal"><em>Cold Spring Harbor Perspectives in Medicine</em> 7(4), a026187 (2017).</div>
+        <div class="ref-note"><strong>Used for:</strong> Li-Fraumeni syndrome prevalence (~1 in 5,000–20,000 individuals), lifetime cancer risk of approximately 90% for women and 70% for men who carry a germline TP53 pathogenic variant, and the spectrum of associated tumours (adrenocortical carcinoma, breast cancer, CNS tumours, osteosarcoma, soft-tissue sarcoma). The statistics in reference [18] supersede earlier estimates of "near-100%" which did not stratify by sex.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1101/cshperspect.a026187" class="ref-link" target="_blank">DOI: 10.1101/cshperspect.a026187</a>
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5378014/" class="ref-link green" target="_blank">PMC Free Full Text</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 7: SOFTWARE & LIBRARIES
+  ═══════════════════════════════════════════════ -->
+  <div class="ref-section-head">Software &amp; Libraries <span>technical credits</span></div>
+
+  <div class="ref-list">
+
+    <div class="ref-card">
+      <div class="ref-num">[19]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Rose AS, Bradley AR, Valasatava Y, Duarte JM, Prlić A, Rose PW.</div>
+        <div class="ref-title">NGL viewer: web-based molecular graphics for large complexes.</div>
+        <div class="ref-journal"><em>Bioinformatics</em> 34(21), 3755–3758 (2018).</div>
+        <div class="ref-note"><strong>Used for:</strong> NGL Viewer is the JavaScript library that renders the 3D protein structure in <code>structure.html</code>. All molecular visualizations (cartoon, surface, ball-and-stick representations) are produced by NGL.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1093/bioinformatics/bty419" class="ref-link" target="_blank">DOI: 10.1093/bioinformatics/bty419</a>
+          <a href="https://nglviewer.org" class="ref-link green" target="_blank">nglviewer.org</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[20]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Bostock M, Ogievetsky V, Heer J.</div>
+        <div class="ref-title">D³: data-driven documents.</div>
+        <div class="ref-journal"><em>IEEE Transactions on Visualization and Computer Graphics</em> 17(12), 2301–2309 (2011).</div>
+        <div class="ref-note"><strong>Used for:</strong> D3.js is the JavaScript library used to render the 393-bar mutation frequency heatmap on <code>mutations.html</code>.</div>
+        <div class="ref-links">
+          <a href="https://doi.org/10.1109/TVCG.2011.185" class="ref-link" target="_blank">DOI: 10.1109/TVCG.2011.185</a>
+          <a href="https://d3js.org" class="ref-link green" target="_blank">d3js.org</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[21]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Chart.js Contributors.</div>
+        <div class="ref-title">Chart.js: Simple yet flexible JavaScript charting library.</div>
+        <div class="ref-journal">Open source software. Version 4.x. MIT License.</div>
+        <div class="ref-note"><strong>Used for:</strong> Chart.js renders the cancer frequency bar chart and mutation type doughnut chart on <code>statistics.html</code>.</div>
+        <div class="ref-links">
+          <a href="https://www.chartjs.org" class="ref-link green" target="_blank">chartjs.org</a>
+          <a href="https://github.com/chartjs/Chart.js" class="ref-link" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-num">[22]</div>
+      <div class="ref-body">
+        <div class="ref-authors">Instrument Fonts — Rodrigo Fuenzalida / Google Fonts.</div>
+        <div class="ref-title">Instrument Serif, Instrument Sans.</div>
+        <div class="ref-journal">Open Font License. Available at fonts.google.com.</div>
+        <div class="ref-note"><strong>Used for:</strong> Typography throughout the website. Instrument Serif is used for headings and the site logo. Instrument Sans is used for body text. Inconsolata is used for data labels, navigation links, and monospaced displays.</div>
+        <div class="ref-links">
+          <a href="https://fonts.google.com/specimen/Instrument+Serif" class="ref-link green" target="_blank">Google Fonts</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ DATA CURRENCY NOTE ══ -->
+  <div style="margin-top:52px; padding: 22px 28px; background: var(--bg2); border: 1px solid var(--bdr); border-radius: 10px; font-size:0.85rem; color:var(--txt2); line-height:1.8;">
+    <strong style="color:var(--txt); font-family:'Instrument Serif',serif; font-size:1rem;">A note on data currency</strong><br>
+    The mutation frequency data displayed in this website is based on the NCI TP53 Database R21 (January 2025). Mutation databases are updated periodically as new literature is added; some frequencies may differ slightly in future releases. The protein structure (PDB 2OCJ) is a static crystal structure from 2006 and remains a valid reference for the p53 DNA-binding domain. For the most current variant data, always consult <a href="https://tp53.cancer.gov" target="_blank" style="color:var(--blue);">tp53.cancer.gov</a> directly.
+  </div>
+
+</main>
+
+<footer>
+  <span>p53 · Mutation Explorer · NCI TP53 Database R21 (2025)</span>
+  <div class="footer-links">
+    <a href="https://tp53.cancer.gov" target="_blank">NCI TP53 Database</a>
+    <a href="https://www.rcsb.org/structure/2OCJ" target="_blank">RCSB PDB 2OCJ</a>
+    <a href="https://www.uniprot.org/uniprot/P04637" target="_blank">UniProt P04637</a>
+  </div>
+</footer>
+
+</body>
+</html>

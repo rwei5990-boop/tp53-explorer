@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p53 Explorer — Domains</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=Inconsolata:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:    #f4f9f0;
+      --bg2:   #ffffff;
+      --bg3:   #e8f4e0;
+      --bdr:   #d0e8d0;
+      --txt:   #1a2a1a;
+      --txt2:  #3a5a3a;
+      --dim:   #6a8a6a;
+      --red:   #d42a2a;
+      --blue:  #1a5aaa;
+      --green: #2a9a50;
+      --yel:   #c8c800;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--txt);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      background: rgba(244,249,240,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--bdr);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .nav-logo { font-family: 'Instrument Serif', serif; font-size: 1.05rem; color: var(--txt); text-decoration: none; }
+    .nav-links { list-style: none; display: flex; gap: 4px; }
+    .nav-links a { font-family: 'Inconsolata', monospace; font-size: 0.7rem; color: var(--dim); text-decoration: none; letter-spacing: 0.06em; padding: 7px 15px; border-radius: 100px; transition: background 0.18s, color 0.18s; }
+    .nav-links a:hover { background: var(--bg3); color: var(--txt); }
+    .nav-links a.active { background: var(--blue); color: #fff; }
+
+    main {
+      flex: 1;
+      padding: 52px 52px 40px;
+    }
+
+    .page-header {
+      max-width: 1200px;
+      margin: 0 auto 36px;
+    }
+
+    .sec-tag {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.68rem;
+      color: var(--green);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sec-tag::before { content: ''; width: 18px; height: 1px; background: var(--green); display: block; }
+
+    h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      line-height: 1.08;
+      margin-bottom: 8px;
+    }
+
+    h2 em { font-style: italic; color: var(--green); }
+
+    .sec-sub {
+      font-size: 0.92rem;
+      color: var(--txt2);
+      line-height: 1.85;
+      max-width: 560px;
+    }
+
+    /* linear domain diagram */
+    .domain-bar {
+      max-width: 1200px;
+      margin: 0 auto 28px;
+      height: 36px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid var(--bdr);
+    }
+
+    .domain-seg {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.9);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: filter 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .domain-seg:hover { filter: brightness(1.15); }
+
+    /* cards */
+    .domain-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+    }
+
+    .dom-card {
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: 12px;
+      padding: 24px;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 0.6s forwards;
+    }
+
+    .dom-card:nth-child(1) { animation-delay: 0.04s; }
+    .dom-card:nth-child(2) { animation-delay: 0.09s; }
+    .dom-card:nth-child(3) { animation-delay: 0.14s; }
+    .dom-card:nth-child(4) { animation-delay: 0.19s; }
+    .dom-card:nth-child(5) { animation-delay: 0.24s; }
+    .dom-card:nth-child(6) { animation-delay: 0.29s; }
+    .dom-card:nth-child(7) { animation-delay: 0.34s; }
+
+    @keyframes rise { to { opacity: 1; transform: none; } }
+
+    .dom-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(26,90,50,0.1); }
+
+    .dom-range {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      color: var(--dim);
+      margin-bottom: 6px;
+    }
+
+    .dom-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .dom-desc { font-size: 0.82rem; color: var(--txt2); line-height: 1.75; }
+
+    .click-hint {
+      max-width: 1200px;
+      margin: 18px auto 0;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.64rem;
+      color: var(--dim);
+      text-align: center;
+    }
+
+    footer {
+      background: var(--txt);
+      color: #6a8a6a;
+      padding: 20px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+
+    footer a { color: #6a8a6a; text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: #c8e0c8; }
+    .footer-links { display: flex; gap: 24px; }
+
+    @media (max-width: 900px) {
+      nav, main, footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">p53 · Mutation Explorer</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="structure.html">Structure</a></li>
+    <li><a href="mutations.html">Mutations</a></li>
+    <li><a href="statistics.html">Statistics</a></li>
+    <li><a href="domains.html" class="active">Domains</a></li>
+    <li><a href="references.html">References</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="sec-tag">Protein Architecture</div>
+    <h2>Functional <em>domains</em></h2>
+    <p class="sec-sub">Seven distinct regions, each with a specific role. Click any card or segment to highlight it in the 3D Structure viewer.</p>
+  </div>
+
+  <div class="domain-bar" id="domain-bar"></div>
+
+  <div class="domain-grid" id="domain-grid"></div>
+
+  <div class="click-hint">Click any domain to open the 3D Structure page with that region highlighted</div>
+</main>
+
+<footer>
+  <span>p53 · Mutation Explorer · NCI TP53 Database R21 (2025)</span>
+  <div class="footer-links">
+    <a href="https://tp53.cancer.gov" target="_blank">NCI TP53 Database</a>
+    <a href="https://www.rcsb.org/structure/2OCJ" target="_blank">RCSB PDB</a>
+    <a href="https://www.uniprot.org/uniprot/P04637" target="_blank">UniProt P04637</a>
+  </div>
+</footer>
+
+<script>
+const DOMAINS = [
+  { name:"Transactivation Domain I",  start:1,   end:40,  color:"#1a5aaa",
+    function:"Binds transcriptional machinery and MDM2, the primary regulator of p53 stability." },
+  { name:"Transactivation Domain II", start:40,  end:67,  color:"#1a7ab0",
+    function:"Cooperates with TAD-I; required for full transcriptional output across all target genes." },
+  { name:"Proline-Rich Region",       start:67,  end:98,  color:"#2a9a50",
+    function:"Required specifically for apoptosis induction — distinct from the cell cycle arrest function." },
+  { name:"DNA Binding Domain",        start:98,  end:292, color:"#d42a2a",
+    function:"Core domain. Physically contacts DNA response elements. Over 80% of all cancer mutations fall here." },
+  { name:"Linker Region",             start:293, end:325, color:"#c8c800",
+    function:"Flexible connector between DNA binding and tetramerization domains." },
+  { name:"Tetramerization Domain",    start:325, end:356, color:"#5a7aee",
+    function:"Drives assembly of the active p53 tetramer. p53 must form a 4-unit complex to function." },
+  { name:"Regulatory Domain",         start:356, end:393, color:"#3a9a50",
+    function:"Contains post-translational modification sites that fine-tune p53 activity." },
+];
+
+const total = 393;
+
+function goToStructure(d) {
+  localStorage.setItem("p53-highlight-domain", JSON.stringify({ start:d.start, end:d.end, color:d.color }));
+  window.location.href = "structure.html";
+}
+
+// Build linear bar
+const bar = document.getElementById("domain-bar");
+DOMAINS.forEach(d => {
+  const seg = document.createElement("div");
+  seg.className = "domain-seg";
+  seg.style.width = `${((d.end - d.start) / total) * 100}%`;
+  seg.style.background = d.color;
+  seg.textContent = d.name.split(" ")[0];
+  seg.title = d.name;
+  seg.addEventListener("click", () => goToStructure(d));
+  bar.appendChild(seg);
+});
+
+// Build cards
+const grid = document.getElementById("domain-grid");
+DOMAINS.forEach(d => {
+  const el = document.createElement("div");
+  el.className = "dom-card";
+  el.style.borderTop = `3px solid ${d.color}`;
+  el.innerHTML = `
+    <div class="dom-range" style="color:${d.color}99">Residues ${d.start}–${d.end}</div>
+    <div class="dom-name" style="color:${d.color}">${d.name}</div>
+    <div class="dom-desc">${d.function}</div>`;
+  el.addEventListener("click", () => goToStructure(d));
+  grid.appendChild(el);
+});
+</script>
+
+</body>
+</html>

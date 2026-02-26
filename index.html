@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p53 Explorer — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=Inconsolata:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:    #ffffff;
+      --bg2:   #f4f9f0;
+      --bg3:   #e8f4e0;
+      --bdr:   #d0e8d0;
+      --txt:   #1a2a1a;
+      --txt2:  #3a5a3a;
+      --dim:   #6a8a6a;
+      --red:   #d42a2a;
+      --blue:  #1a5aaa;
+      --green: #2a9a50;
+      --yel:   #c8c800;
+      --newcolortypeshitganggang:   #041506;
+
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--txt);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--bdr);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .nav-logo {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.05rem;
+      color: var(--txt);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.7rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      padding: 7px 15px;
+      border-radius: 100px;
+      transition: background 0.18s, color 0.18s;
+    }
+
+    .nav-links a:hover { background: var(--bg2); color: var(--txt); }
+    .nav-links a.active { background: var(--blue); color: #fff; }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 60px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* green blob */
+    .blob {
+      position: absolute;
+      right: -80px; top: 50%;
+      transform: translateY(-50%);
+      width: 620px; height: 620px;
+      background: radial-gradient(ellipse at 40% 40%, #c8f070 0%, transparent 65%);
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      animation: morph 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes morph {
+      0%,100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+      33%      { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+      66%      { border-radius: 30% 70% 30% 70% / 50% 60% 40% 60%; }
+    }
+
+    .hero-grid {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      margin-bottom: 26px;
+    }
+
+    .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--yel); }
+
+    h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(3rem, 5.5vw, 5.2rem);
+      line-height: 1.05;
+      color: var(--txt);
+      margin-bottom: 22px;
+    }
+
+    h1 em { font-style: italic; color: var(--green); }
+
+    .sub {
+      font-size: 1rem;
+      color: var(--txt2);
+      line-height: 1.85;
+      max-width: 500px;
+      margin-bottom: 40px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 30px;
+      background: var(--blue);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border-radius: 100px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .cta:hover { background: var(--green); transform: translateY(-2px); }
+
+    /* stats column */
+    .stat-list { display: flex; flex-direction: column; }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--bdr);
+    }
+
+    .stat-row:first-child { border-top: 1px solid var(--bdr); }
+
+    .stat-val {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.5rem;
+      color: var(--blue);
+      line-height: 1;
+    }
+
+    .stat-lbl {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.64rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      text-align: right;
+      max-width: 155px;
+      line-height: 1.5;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--txt);
+      color: #6a8a6a;
+      padding: 20px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+
+    footer a { color: #6a8a6a; text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: #c8e0c8; }
+
+    .footer-links { display: flex; gap: 24px; }
+
+    /* fade-in */
+    .fade { opacity: 0; transform: translateY(18px); animation: fadein 0.7s forwards; }
+    .fade:nth-child(2) { animation-delay: 0.1s; }
+    .fade:nth-child(3) { animation-delay: 0.2s; }
+    .fade:nth-child(4) { animation-delay: 0.3s; }
+
+    @keyframes fadein { to { opacity: 1; transform: none; } }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .blob { display: none; }
+      nav { padding: 0 24px; }
+      main { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">p53 · Mutation Explorer</a>
+  <ul class="nav-links">
+    <li><a href="index.html"      class="active">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="structure.html">Structure</a></li>
+    <li><a href="mutations.html">Mutations</a></li>
+    <li><a href="statistics.html">Statistics</a></li>
+    <li><a href="domains.html">Domains</a></li>
+    <li><a href="references.html">References</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="blob"></div>
+  <div class="hero-grid">
+
+    <div class="hero-left">
+      <div class="pill fade"><div class="pill-dot"></div>Interactive Molecular Biology</div>
+      <h1 class="fade">The <em>Guardian</em><br>of the Genome</h1>
+      <p class="sub fade">TP53 is the most frequently mutated gene in human cancer — altered in over half of all solid tumor cases and present in roughly 29% of all cancer diagnoses globally. Explore its 3D structure, map every known mutation, and understand why it matters.</p>
+      <a href="about.html" class="cta fade">Start exploring →</a>
+    </div>
+
+    <div class="hero-right">
+      <div class="stat-list">
+        <div class="stat-row">
+          <span class="stat-val">50%+</span>
+          <span class="stat-lbl">of all cancers carry TP53 mutations</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-val">393</span>
+          <span class="stat-lbl">amino acids in the p53 protein</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-val">29,900+</span>
+          <span class="stat-lbl">tumor variants catalogued in NCI TP53 Database R21</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-val">44</span>
+          <span class="stat-lbl">years of research since p53 was discovered"</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <span>p53 · Mutation Explorer · NCI TP53 Database R21 (2025)</span>
+  <div class="footer-links">
+    <a href="https://tp53.cancer.gov" target="_blank">NCI TP53 Database</a>
+    <a href="https://www.rcsb.org/structure/2OCJ" target="_blank">RCSB PDB</a>
+    <a href="https://www.uniprot.org/uniprot/P04637" target="_blank">UniProt P04637</a>
+  </div>
+</footer>
+
+</body>
+</html>

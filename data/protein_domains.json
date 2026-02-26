@@ -1,0 +1,16 @@
+[
+  { "name": "Transactivation Domain I", "start": 1, "end": 40, "color": "#1a5aaa",
+    "function": "Binds transcriptional machinery and MDM2, the primary regulator of p53 stability." },
+  { "name": "Transactivation Domain II", "start": 40, "end": 67, "color": "#1a7ab0",
+    "function": "Cooperates with TAD-I; required for full transcriptional output across all target genes." },
+  { "name": "Proline-Rich Region", "start": 67, "end": 98, "color": "#2a9a50",
+    "function": "Required specifically for apoptosis induction — distinct from the cell cycle arrest function." },
+  { "name": "DNA Binding Domain", "start": 98, "end": 292, "color": "#d42a2a",
+    "function": "Core domain. Physically contacts DNA response elements. Over 80% of all cancer mutations fall here." },
+  { "name": "Linker Region", "start": 293, "end": 325, "color": "#c8c800",
+    "function": "Flexible connector between DNA binding and tetramerization domains." },
+  { "name": "Tetramerization Domain", "start": 325, "end": 356, "color": "#5a7aee",
+    "function": "Drives assembly of the active p53 tetramer. p53 must form a 4-unit complex to function." },
+  { "name": "Regulatory Domain", "start": 356, "end": 393, "color": "#3a9a50",
+    "function": "Contains post-translational modification sites that fine-tune p53 activity." }
+]

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p53 Explorer — Statistics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=Inconsolata:wght@300;400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:    #ffffff;
+      --bg2:   #f4f9f0;
+      --bg3:   #e8f4e0;
+      --bdr:   #d0e8d0;
+      --txt:   #1a2a1a;
+      --txt2:  #3a5a3a;
+      --dim:   #6a8a6a;
+      --red:   #d42a2a;
+      --blue:  #1a5aaa;
+      --green: #2a9a50;
+      --yel:   #c8c800;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--txt);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--bdr);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .nav-logo { font-family: 'Instrument Serif', serif; font-size: 1.05rem; color: var(--txt); text-decoration: none; }
+    .nav-links { list-style: none; display: flex; gap: 4px; }
+    .nav-links a { font-family: 'Inconsolata', monospace; font-size: 0.7rem; color: var(--dim); text-decoration: none; letter-spacing: 0.06em; padding: 7px 15px; border-radius: 100px; transition: background 0.18s, color 0.18s; }
+    .nav-links a:hover { background: var(--bg2); color: var(--txt); }
+    .nav-links a.active { background: var(--blue); color: #fff; }
+
+    main {
+      flex: 1;
+      padding: 52px 52px 40px;
+    }
+
+    .page-header {
+      max-width: 1200px;
+      margin: 0 auto 36px;
+    }
+
+    .sec-tag {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.68rem;
+      color: var(--green);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sec-tag::before { content: ''; width: 18px; height: 1px; background: var(--green); display: block; }
+
+    h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      line-height: 1.08;
+      margin-bottom: 8px;
+    }
+
+    h2 em { font-style: italic; color: var(--green); }
+
+    .sec-sub {
+      font-size: 0.92rem;
+      color: var(--txt2);
+      line-height: 1.85;
+      max-width: 560px;
+    }
+
+    .charts-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 24px;
+    }
+
+    .chart-card {
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: 16px;
+      padding: 30px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 0.65s forwards;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 280px;
+    }
+
+    .chart-card:nth-child(2) { animation-delay: 0.12s; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+
+    .chart-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.1rem;
+      color: var(--txt);
+      margin-bottom: 4px;
+    }
+
+    .chart-sub {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      color: var(--dim);
+      margin-bottom: 20px;
+    }
+
+    .stat-callouts {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .callout {
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: 12px;
+      padding: 18px 20px;
+      opacity: 0;
+      animation: rise 0.6s forwards;
+    }
+
+    .callout:nth-child(1) { animation-delay: 0.2s; }
+    .callout:nth-child(2) { animation-delay: 0.28s; }
+    .callout:nth-child(3) { animation-delay: 0.36s; }
+    .callout:nth-child(4) { animation-delay: 0.44s; }
+
+    .callout-val {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.6rem;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .callout-lbl {
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    footer {
+      background: var(--txt);
+      color: #6a8a6a;
+      padding: 20px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Inconsolata', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+
+    footer a { color: #6a8a6a; text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: #c8e0c8; }
+    .footer-links { display: flex; gap: 24px; }
+
+    @media (max-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .stat-callouts { grid-template-columns: 1fr 1fr; }
+      nav, main, footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">p53 · Mutation Explorer</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="structure.html">Structure</a></li>
+    <li><a href="mutations.html">Mutations</a></li>
+    <li><a href="statistics.html" class="active">Statistics</a></li>
+    <li><a href="domains.html">Domains</a></li>
+    <li><a href="references.html">References</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="sec-tag">Epidemiology</div>
+    <h2>Mutation <em>patterns</em></h2>
+    <p class="sec-sub">TP53 is not mutated randomly. Specific cancer types carry disproportionately high mutation burdens, and missense mutations dominate overwhelmingly.</p>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Mutations by Cancer Type</div>
+      <div class="chart-sub">Total mutated samples per topography · NCI TP53 Database R21</div>
+      <div class="chart-wrap"><canvas id="cancerChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Mutation Type Distribution</div>
+      <div class="chart-sub">Percentage of all somatic TP53 mutations</div>
+      <div class="chart-wrap"><canvas id="typeChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="stat-callouts">
+    <div class="callout">
+      <div class="callout-val">74.1%</div>
+      <div class="callout-lbl">of all TP53 mutations are missense — a single amino acid change</div>
+    </div>
+    <div class="callout">
+      <div class="callout-val">80%+</div>
+      <div class="callout-lbl">of cancer mutations fall in the DNA Binding Domain (residues 98–292)</div>
+    </div>
+    <div class="callout">
+      <div class="callout-val">6</div>
+      <div class="callout-lbl">hotspot codons account for ~20% of all TP53 mutations in cancer</div>
+    </div>
+    <div class="callout">
+      <div class="callout-val">R175H</div>
+      <div class="callout-lbl">is the single most common TP53 mutation across all cancer types</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>p53 · Mutation Explorer · NCI TP53 Database R21 (2025)</span>
+  <div class="footer-links">
+    <a href="https://tp53.cancer.gov" target="_blank">NCI TP53 Database</a>
+    <a href="https://www.rcsb.org/structure/2OCJ" target="_blank">RCSB PDB</a>
+    <a href="https://www.uniprot.org/uniprot/P04637" target="_blank">UniProt P04637</a>
+  </div>
+</footer>
+
+<script>
+Chart.defaults.color         = "#6a8a6a";
+Chart.defaults.borderColor   = "#d0e8d0";
+Chart.defaults.font.family   = "Inconsolata, monospace";
+
+fetch('data/cancer_frequencies.json')
+  .then(r => r.json())
+  .then(data => {
+    new Chart(document.getElementById("cancerChart"), {
+      type: "bar",
+      data: {
+        labels: Object.keys(data),
+        datasets: [{
+          label: "Mutations",
+          data: Object.values(data),
+          backgroundColor: "rgba(26,90,170,0.45)",
+          borderColor: "#1a5aaa",
+          borderWidth: 1,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display:false },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                return ` ${ctx.raw} mutations (${((ctx.raw/total)*100).toFixed(1)}% of total)`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: { grid:{ color:"#d0e8d0" }, ticks:{ color:"#6a8a6a", font:{size:10} } },
+          x: { grid:{ display:false },  ticks:{ color:"#6a8a6a", maxRotation:40, font:{size:9} } }
+        }
+      }
+    });
+  });
+
+new Chart(document.getElementById("typeChart"), {
+  type: "doughnut",
+  data: {
+    labels: ["Missense","Nonsense","Frameshift","Splice Site","In-frame","Other"],
+    datasets: [{
+      data: [74.1, 9.3, 8.8, 4.7, 2.1, 1.0],
+      backgroundColor: ["#1a5aaa","#2a9a50","#c8c800","#d42a2a","#5a7aee","#1a7ab0"],
+      borderColor: "#f4f9f0",
+      borderWidth: 3,
+      hoverOffset: 5,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: "62%",
+    plugins: {
+      legend: { position:"right", labels:{ color:"#6a8a6a", padding:14, font:{size:10}, boxWidth:10 } },
+      tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw}%` } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
