@@ -404,7 +404,7 @@ document.getElementById("hs-right").addEventListener("click", () => {
   scrollEl.scrollBy({ left: 340, behavior: "smooth" });
 });
 
-fetch('data/mutation_map.json')
+fetch('data/mutation_map.min.json')
   .then(r => r.json())
   .then(mData => {
 

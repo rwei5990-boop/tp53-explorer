@@ -295,10 +295,10 @@ const HOTSPOTS = { 175:1, 245:1, 248:1, 249:1, 273:1, 282:1 };
 let stage, nglComp, spinning = false, hsOn = true;
 
 window.addEventListener("load", () => {
-  stage = new NGL.Stage("viewport", { backgroundColor:"#d0ead8", fogNear:100, fogFar:200 }); //Here
+  stage = new NGL.Stage("viewport", { backgroundColor:"#d0ead8", fogNear:100, fogFar:200, rotateSpeed:0.5, zoomSpeed:0.8 }); //Here
   window.addEventListener("resize", () => stage.handleResize());
 
-  stage.loadFile("rcsb://2OCJ", { defaultRepresentation: false })
+  stage.loadFile("data/2OCJ.pdb", { defaultRepresentation: false })
     .then(comp => {
       nglComp = comp;
       window.nglComp = comp;
