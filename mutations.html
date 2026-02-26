@@ -8,6 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@300;400;500&family=Inconsolata:wght@300;400&display=swap" rel="stylesheet">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
+    button:active { transform: translateY(1px); }
+    .vbtn:active  { transform: translateY(1px); box-shadow: none; }
+    .cta:active   { transform: translateY(1px); }
+    
     :root {
       --bg:    #f4f9f0;
       --bg2:   #ffffff;
@@ -406,6 +410,7 @@ document.getElementById("hs-right").addEventListener("click", () => {
 
 fetch('data/mutation_map.min.json')
   .then(r => r.json())
+
   .then(mData => {
 
 // D3 map
