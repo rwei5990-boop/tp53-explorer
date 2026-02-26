@@ -262,7 +262,12 @@ const DOMAINS = [
 const total = 393;
 
 function goToStructure(d) {
-  localStorage.setItem("p53-highlight-domain", JSON.stringify({ start:d.start, end:d.end, color:d.color }));
+  // PDB 2OCJ only contains residues ~94–292 (DNA-binding domain)
+  if (d.end < 94 || d.start > 292) {
+    alert(`"${d.name}" (residues ${d.start}–${d.end}) is not present in the 2OCJ crystal structure, which only covers the DNA-binding domain (residues 94–292). The 3D viewer cannot highlight this region.`);
+    return;
+  }
+  localStorage.setItem("p53-highlight-domain", JSON.stringify({ start:d.start, end:d.end, color:d.color, name:d.name }));
   window.location.href = "structure.html";
 }
 

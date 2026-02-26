@@ -341,26 +341,55 @@ function drawDefault(comp) {
   hideBanner();
 }
 
-// Highlight a domain range — dim rest, colour the selection
+// Highlight a domain range — near-invisible rest, vivid selection
 function drawDomain(comp, start, end, color, label) {
   comp.removeAllRepresentations();
-  // Full protein very dim
+  // Rest of protein: nearly invisible, very thin
   comp.addRepresentation("cartoon", {
     colorScheme: "uniform",
-    color:       "#aaccaa",
-    opacity:     0.18,
-    smoothSheet: true
+    color:       "#888888",
+    opacity:     0.08,
+    smoothSheet: true,
+    scale:       0.5
   });
-  // Highlighted region bright
+  // Highlighted domain: bright yellow, thick ribbon
   comp.addRepresentation("cartoon", {
     sele:        `${start}-${end}`,
-    color:       color,
-    opacity:     1,
-    smoothSheet: true
+    color:       "#ffe600",
+    opacity:     1.0,
+    smoothSheet: true,
+    aspectRatio: 5,
+    scale:       2.0
   });
-  // Zoom to the selected region
-  comp.autoView(`${start}-${end}`, 1200);
-  showBanner(`Highlighting: ${label}\nResidues ${start}–${end}`);
+  // Outer glow layer — larger soft yellow spheres
+  comp.addRepresentation("spacefill", {
+    sele:    `${start}-${end}`,
+    color:   "#ffe600",
+    opacity: 0.25,
+    radius:  2.4
+  });
+  // Wait for NGL to finish rendering, then flash the viewer white 4 times
+  setTimeout(() => {
+    comp.autoView(`${start}-${end}`, 1000);
+    // Extra delay so the zoom completes before flashing
+    setTimeout(() => {
+      const viewport = document.getElementById("viewport");
+      if (viewport) {
+        let flashes = 0;
+        const flashInterval = setInterval(() => {
+          viewport.style.boxShadow = flashes % 2 === 0
+            ? "inset 0 0 0 9999px rgba(255,255,255,0.75)"
+            : "none";
+          flashes++;
+          if (flashes >= 8) {
+            clearInterval(flashInterval);
+            viewport.style.boxShadow = "none";
+          }
+        }, 200);
+      }
+    }, 1200);
+  }, 100);
+  showBanner(`Highlighting: ${label} · Residues ${start}–${end}`);
 }
 
 // Highlight a single residue
